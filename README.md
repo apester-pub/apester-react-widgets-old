@@ -44,7 +44,7 @@ This component injects event listener into your project.
 
 ```tsx
 import React, { useCallback } from 'react'
-import { ApesterEventListener } from 'apester-react-widgets';
+import { ApesterEvent } from 'apester-react-widgets';
 
 interface MessageValues {
     type: 'picked_answer' | 'refresh_companion_ad'
