@@ -16,10 +16,14 @@ export interface ApesterMediaWidgetProps {
     'data-manual-top-mobile'?: string;
     'external-id'?: string;
     sandboxMode?: boolean;
+    'agencyData'?: {
+        agencyName: string;
+        agencyImage: string;
+    }
 }
 
 
-const ApesterMediaWidget = React.forwardRef<HTMLDivElement, ApesterMediaWidgetProps>(({ className = '', sandboxMode= false, ...props }, ref) => {
+const ApesterMediaWidget = React.forwardRef<HTMLDivElement, ApesterMediaWidgetProps>(({ className = '', agencyData,sandboxMode= false, ...props }, ref) => {
     const scriptStatus = useScript(WEB_SDK_URL);
     if(!props['data-media-id']) {
         throw new Error("'data-media-id' is mandatory prop.");
@@ -30,6 +34,7 @@ const ApesterMediaWidget = React.forwardRef<HTMLDivElement, ApesterMediaWidgetPr
             ref={ref}
             className={`apester-media ${className}`}
             sandbox-mode={`${sandboxMode}`}
+            agency-data={agencyData ? JSON.stringify(agencyData) : undefined}
             {...props}
         />
     }
