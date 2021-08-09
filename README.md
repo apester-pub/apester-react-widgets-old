@@ -39,7 +39,9 @@ interface WidgetProps {
 ```
 
 ####ApesterEvent
+
 This component injects event listener into your project.
+
 ```tsx
 import React, { useCallback } from 'react'
 import { ApesterEventListener } from 'apester-react-widgets';
