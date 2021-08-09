@@ -38,7 +38,7 @@ interface WidgetProps {
 <ApesterMediaWidget data-media-id="{{apester unit id}}" />
 ```
 
-####ApesterEvent
+#### ApesterEvent
 
 This component injects event listener into your project.
 
