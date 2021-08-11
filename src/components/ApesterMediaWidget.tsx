@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import useScript from "../hooks/useScript";
 import {WEB_SDK_URL} from "../config";
 
@@ -24,6 +24,18 @@ export interface ApesterMediaWidgetProps {
 
 
 const ApesterMediaWidget = React.forwardRef<HTMLDivElement, ApesterMediaWidgetProps>(({ className = '', agencyData,sandboxMode= false, ...props }, ref) => {
+
+    const mounted = useRef(false);
+    useEffect(() => {
+        mounted.current = true;
+    }, []);
+    useEffect(() => {
+        // @ts-ignore
+        if(mounted.current === true && window.APESTER) {
+            // @ts-ignore
+            window.APESTER.reload();
+        }
+    }, [window.location.pathname]);
     const scriptStatus = useScript(WEB_SDK_URL);
     if(!props['data-media-id']) {
         throw new Error("'data-media-id' is mandatory prop.");
