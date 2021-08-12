@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useImperativeHandle} from "react";
 import useScript from "../hooks/useScript";
 import {WEB_SDK_URL} from "../config";
 
@@ -22,20 +22,22 @@ export interface ApesterMediaWidgetProps {
     }
 }
 
+interface WidgetHandle {
+    reload: () => void;
+    instance?: HTMLDivElement
+}
 
-const ApesterMediaWidget = React.forwardRef<HTMLDivElement, ApesterMediaWidgetProps>(({ className = '', agencyData,sandboxMode= false, ...props }, ref) => {
 
-    const mounted = useRef(false);
-    useEffect(() => {
-        mounted.current = true;
-    }, []);
-    useEffect(() => {
-        // @ts-ignore
-        if(mounted.current === true && window.APESTER) {
+const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProps>(({ className = '', agencyData,sandboxMode= false, ...props }, ref) => {
+    useImperativeHandle(ref, () => ({
+        reload: () => {
             // @ts-ignore
-            window.APESTER.reload();
+            if(window.APESTER){
+                // @ts-ignore
+                window.APESTER.reload();
+            }
         }
-    }, [window.location.pathname]);
+    }));
     const scriptStatus = useScript(WEB_SDK_URL);
     if(!props['data-media-id']) {
         throw new Error("'data-media-id' is mandatory prop.");
@@ -43,7 +45,7 @@ const ApesterMediaWidget = React.forwardRef<HTMLDivElement, ApesterMediaWidgetPr
     if(scriptStatus === 'ready') {
         // @ts-ignore
         return <div
-            ref={ref}
+            ref={ref as any}
             className={`apester-media ${className}`}
             sandbox-mode={`${sandboxMode}`}
             agency-data={agencyData ? JSON.stringify(agencyData) : undefined}
