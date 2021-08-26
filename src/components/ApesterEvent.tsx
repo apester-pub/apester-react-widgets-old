@@ -3,7 +3,7 @@ import useScript from "../hooks/useScript";
 import {WEB_SDK_URL} from "../config";
 
 export interface MessageValues {
-    type: 'picked_answer' | 'refresh_companion_ad'
+    type: 'picked_answer' | 'refresh_companion_ad' | 'finished_interaction'
     data: {
         answerId: string
         answerText: string

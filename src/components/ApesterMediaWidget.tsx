@@ -1,12 +1,16 @@
-import React, {useEffect, useRef, useImperativeHandle} from "react";
+import React, {useImperativeHandle, useRef} from "react";
 import useScript from "../hooks/useScript";
 import {WEB_SDK_URL} from "../config";
+import ApesterEvent from "./ApesterEvent";
+import useCombinedRef from "../hooks/useCombinedRef";
 
 export interface ApesterMediaWidgetProps {
     id?: string;
     height?: string;
     className?: string;
     results?: string;
+    autoCloseOnFinish?: boolean;
+    autoCloseTimeout?: number;
     'data-media-id': string;
     'data-token'?: string;
     'data-campaign-id'?: string;
@@ -28,29 +32,51 @@ interface WidgetHandle {
 }
 
 
-const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProps>(({ className = '', agencyData,sandboxMode= false, ...props }, ref) => {
+const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProps>((
+    {
+        className = '',
+        agencyData,
+        sandboxMode = false,
+        autoCloseOnFinish = false,
+        autoCloseTimeout = 300,
+        ...props
+    },
+    ref
+) => {
+    const innerRef = useRef(null);
     useImperativeHandle(ref, () => ({
         reload: () => {
             // @ts-ignore
-            if(window.APESTER){
+            if (window.APESTER) {
                 // @ts-ignore
                 window.APESTER.reload();
             }
         }
     }));
+    const combinedRef = useCombinedRef(ref, innerRef);
     const scriptStatus = useScript(WEB_SDK_URL);
-    if(!props['data-media-id']) {
+    if (!props['data-media-id']) {
         throw new Error("'data-media-id' is mandatory prop.");
     }
-    if(scriptStatus === 'ready') {
-        // @ts-ignore
-        return <div
-            ref={ref as any}
-            className={`apester-media ${className}`}
-            sandbox-mode={`${sandboxMode}`}
-            agency-data={agencyData ? JSON.stringify(agencyData) : undefined}
-            {...props}
-        />
+    if (scriptStatus === 'ready') {
+        return <>
+            {
+                autoCloseOnFinish === true &&
+                <ApesterEvent callback={() => {
+                    setTimeout(() => {
+                        combinedRef?.current.querySelector('iframe').contentWindow.postMessage({type: 'fullscreen_off'}, '*');
+                    }, autoCloseTimeout)
+                }} type="finished_interaction" />
+            }
+            {/*@ts-ignore*/}
+            <div
+                ref={combinedRef as any}
+                className={`apester-media ${className}`}
+                sandbox-mode={`${sandboxMode}`}
+                agency-data={agencyData ? JSON.stringify(agencyData) : undefined}
+                {...props}
+            />
+        </>
     }
     return null;
 });
