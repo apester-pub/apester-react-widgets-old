@@ -22,6 +22,8 @@ import { ApesterMediaWidget } from 'apester-react-widgets';
 interface WidgetProps {
     id?: string;
     height?: string;
+    autoCloseOnFinish?: boolean;
+    autoCloseTimeout?: number;
     className?: string;
     results?: string;
     'data-media-id': string;
