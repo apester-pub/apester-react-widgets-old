@@ -22,10 +22,10 @@ import { ApesterMediaWidget } from 'apester-react-widgets';
 interface WidgetProps {
     id?: string;
     height?: string;
-    autoCloseOnFinish?: boolean;
-    autoCloseTimeout?: number;
     className?: string;
     results?: string;
+    autoCloseOnFinish?: boolean;
+    autoCloseTimeout?: number;
     'data-media-id': string;
     'data-token'?: string;
     'data-campaign-id'?: string;
@@ -34,6 +34,11 @@ interface WidgetProps {
     'data-manual-top-desktop'?: string;
     'data-manual-top-mobile'?: string;
     'external-id'?: string;
+    sandboxMode?: boolean;
+    'agencyData'?: {
+        agencyName: string;
+        agencyImage: string;
+    };
 }
 
 // Render your Apester unit
