@@ -66,7 +66,7 @@ const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProp
                     setTimeout(() => {
                         combinedRef?.current.querySelector('iframe').contentWindow.postMessage({type: 'fullscreen_off'}, '*');
                     }, autoCloseTimeout)
-                }} type="finished_interaction" />
+                }} type="last_slide_reached" />
             }
             {/*@ts-ignore*/}
             <div
