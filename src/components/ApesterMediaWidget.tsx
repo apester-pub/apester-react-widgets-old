@@ -1,4 +1,4 @@
-import React, {useImperativeHandle, useRef} from "react";
+import React, {useEffect, useImperativeHandle, useRef} from "react";
 import useScript from "../hooks/useScript";
 import {WEB_SDK_LEGACY_URL, WEB_SDK_URL} from "../config";
 import ApesterEvent from "./ApesterEvent";
@@ -44,15 +44,25 @@ const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProp
     ref
 ) => {
     const innerRef = useRef(null);
+    const reloadApesterUnit = () => {
+        // @ts-ignore
+           if (window.APESTER) {
+               // @ts-ignore
+               window.APESTER.reload();
+           }
+    }
     useImperativeHandle(ref, () => ({
         reload: () => {
-            // @ts-ignore
-            if (window.APESTER) {
-                // @ts-ignore
-                window.APESTER.reload();
-            }
+            reloadApesterUnit();
         }
     }));
+
+    useEffect(() => {
+        reloadApesterUnit();
+    }, [
+        props['data-media-id']
+    ]);
+
     const combinedRef = useCombinedRef(ref, innerRef);
     const scriptStatus = useScript(WEB_SDK_URL);
     useScript(WEB_SDK_LEGACY_URL, true);
@@ -71,6 +81,7 @@ const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProp
             }
             {/*@ts-ignore*/}
             <div
+                key={props['data-media-id']}
                 ref={combinedRef as any}
                 className={`apester-media ${className}`}
                 sandbox-mode={`${sandboxMode}`}
