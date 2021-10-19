@@ -1,6 +1,6 @@
 import React, {useEffect, useImperativeHandle, useRef} from "react";
 import useScript from "../hooks/useScript";
-import {WEB_SDK_LEGACY_URL, WEB_SDK_URL} from "../config";
+import {WEB_SDK_LEGACY_URL} from "../config";
 import ApesterEvent from "./ApesterEvent";
 import useCombinedRef from "../hooks/useCombinedRef";
 
@@ -64,8 +64,7 @@ const ApesterMediaWidget = React.forwardRef<WidgetHandle, ApesterMediaWidgetProp
     ]);
 
     const combinedRef = useCombinedRef(ref, innerRef);
-    const scriptStatus = useScript(WEB_SDK_URL);
-    useScript(WEB_SDK_LEGACY_URL, true);
+    const scriptStatus = useScript(WEB_SDK_LEGACY_URL);
     if (!props['data-media-id']) {
         throw new Error("'data-media-id' is mandatory prop.");
     }
